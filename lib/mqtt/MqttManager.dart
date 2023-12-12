@@ -9,15 +9,21 @@ class MQTTManager {
   final String _identifier;
   final String _host;
   final String _topic;
+  final String _username;
+  final String _password;
 
   // Constructor
   // ignore: sort_constructors_first
   MQTTManager(
-      {required String host,
+      {required String username,
+      required String password,
+      required String host,
       required String topic,
       required String identifier,
       required MQTTAppState state})
       : _identifier = identifier,
+        _username = username,
+        _password = password,
         _host = host,
         _topic = topic,
         _currentState = state;
@@ -36,6 +42,7 @@ class MQTTManager {
 
     final MqttConnectMessage connMess = MqttConnectMessage()
         .withClientIdentifier(_identifier)
+        .authenticateAs(_username, _password)
         .withWillTopic(
             'willtopic') // If you set this you must set a will message
         .withWillMessage('My Will message')
@@ -67,7 +74,7 @@ class MQTTManager {
   void publish(String message) {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    _client!.publishMessage(_topic, MqttQos.exactlyOnce, builder.payload!);
+    _client!.publishMessage("UAS-IOT/43321118/led", MqttQos.exactlyOnce, builder.payload!);
   }
 
   /// The subscribed callback
