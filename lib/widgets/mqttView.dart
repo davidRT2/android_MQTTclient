@@ -77,6 +77,7 @@ class _MQTTViewState extends State<MQTTView> {
       // _buildScrollableTextWith(currentAppState.getHistoryText),
       // Show Snackbar based on connection state
       _buildStatusCard(),
+      // _showStatusSnackbar(),
     ],
   );
 }
@@ -104,6 +105,57 @@ class _MQTTViewState extends State<MQTTView> {
 }
 
   // ... (rest of your existing _MQTTViewState class)
+
+// Widget _showStatusSnackbar() {
+//   return Builder(
+//     builder: (BuildContext context) {
+//       String snackbarMessage = '';
+//       IconData snackbarIcon = Icons.info; // Default icon
+//       Color snackbarColor = Colors.black; // Default color
+
+//       if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connected && currentAppState.isFirstConnection) {
+//         // Hanya tampilkan pesan snackbar saat status terhubung (connected)
+//         currentAppState.setFirstConnection(false);
+//         snackbarMessage = 'Connected! Already subscribed to \n' + _topiSubscribe;
+//         snackbarIcon = Icons.check;
+//         snackbarColor = Colors.green;
+//       } else if (currentAppState.getAppConnectionState == MQTTAppConnectionState.disconnected) {
+//         currentAppState.setFirstConnection(true);
+//         snackbarMessage = 'Disconnected!';
+//         snackbarIcon = Icons.clear;
+//         snackbarColor = Colors.red;
+//       } else if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connecting) {
+//         snackbarMessage = 'Proses...';
+//         snackbarColor = Colors.blue;
+//       }
+
+//       if (snackbarMessage.isNotEmpty) {
+//         WidgetsBinding.instance?.addPostFrameCallback((_) {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(
+//               content: Row(
+//                 children: [
+//                   if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connecting)
+//                     CircularProgressIndicator(
+//                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+//                     )
+//                   else
+//                     Icon(snackbarIcon, color: Colors.white),
+//                   SizedBox(width: 10),
+//                   Text(snackbarMessage),
+//                 ],
+//               ),
+//               duration: Duration(seconds: 3),
+//               backgroundColor: snackbarColor,
+//             ),
+//           );
+//         });
+//       }
+
+//       return Container();
+//     },
+//   );
+// }
 
 
 
