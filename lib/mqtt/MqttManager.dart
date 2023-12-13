@@ -74,7 +74,7 @@ class MQTTManager {
   void publish(String message) {
     final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    _client!.publishMessage("UAS-IOT/43321118/led", MqttQos.exactlyOnce, builder.payload!);
+    _client!.publishMessage("UAS-IOT/43321118/status", MqttQos.exactlyOnce, builder.payload!);
   }
 
   /// The subscribed callback
