@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:temprature_monitor/mqtt/state/MQTTAppState.dart';
@@ -18,6 +19,9 @@ class _MQTTViewState extends State<MQTTView> {
   final TextEditingController _usernameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   final String _topiSubscribe = "UAS-IOT/43321118/data";
+  bool _led1Status = false;
+  bool _led2Status = false;
+  bool _led3Status = false;
 
   late MQTTAppState currentAppState;
   late MQTTManager manager;
@@ -63,103 +67,141 @@ class _MQTTViewState extends State<MQTTView> {
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
       title: const Text('Aku David dan aku bahagia 😥'),
-      backgroundColor: Colors.greenAccent,
+      backgroundColor: const Color.fromARGB(255, 10, 184, 100),
     );
   }
 
   Widget _buildColumn() {
-  return Column(
-    children: <Widget>[
-      _buildAppBar(context),  // Add this line to include the app bar
-      // _buildConnectionStateText(
-      //     _prepareStateMessageFrom(currentAppState.getAppConnectionState)),
-      _buildEditableColumn(),
-      // _buildScrollableTextWith(currentAppState.getHistoryText),
-      // Show Snackbar based on connection state
-      _buildStatusCard(),
-      // _showStatusSnackbar(),
-    ],
-  );
-}
-  Widget _buildStatusCard() {
-  return Card(
-    elevation: 5,
-    margin: const EdgeInsets.all(20.0),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Temperature: ${currentAppState.getTemperature} °C',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Humidity: ${currentAppState.getHumidity} %',
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+    return Column(
+      children: <Widget>[
+        // _buildAppBar(context),  // Add this line to include the app bar
+        // _buildConnectionStateText(
+        //     _prepareStateMessageFrom(currentAppState.getAppConnectionState)),
+        _buildEditableColumn(),
+        // _buildScrollableTextWith(currentAppState.getHistoryText),
+        // Show Snackbar based on connection state
+        _buildSensorDataCard(),
+        // _buildLEDControlCard(),
+        _showStatusSnackbar(),
+      ],
+    );
+  }
 
+  Widget _buildSensorDataCard() {
+    return Card(
+      elevation: 5,
+      margin: const EdgeInsets.all(20.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.thermostat, color: Colors.red, size: 30),
+                    SizedBox(width: 10),
+                    Text(
+                      'Temperature',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Text(
+                  '${currentAppState.getTemperature} °C',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            SizedBox(height: 15),
+            Divider(color: Colors.grey),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.opacity, color: Colors.blue, size: 30),
+                    SizedBox(width: 10),
+                    Text(
+                      'Humidity',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Text(
+                  '${currentAppState.getHumidity} %',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   // ... (rest of your existing _MQTTViewState class)
 
-// Widget _showStatusSnackbar() {
-//   return Builder(
-//     builder: (BuildContext context) {
-//       String snackbarMessage = '';
-//       IconData snackbarIcon = Icons.info; // Default icon
-//       Color snackbarColor = Colors.black; // Default color
+  Widget _showStatusSnackbar() {
+    return Builder(
+      builder: (BuildContext context) {
+        String snackbarMessage = '';
+        IconData snackbarIcon = Icons.info; // Default icon
+        Color snackbarColor = Colors.black; // Default color
 
-//       if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connected && currentAppState.isFirstConnection) {
-//         // Hanya tampilkan pesan snackbar saat status terhubung (connected)
-//         currentAppState.setFirstConnection(false);
-//         snackbarMessage = 'Connected! Already subscribed to \n' + _topiSubscribe;
-//         snackbarIcon = Icons.check;
-//         snackbarColor = Colors.green;
-//       } else if (currentAppState.getAppConnectionState == MQTTAppConnectionState.disconnected) {
-//         currentAppState.setFirstConnection(true);
-//         snackbarMessage = 'Disconnected!';
-//         snackbarIcon = Icons.clear;
-//         snackbarColor = Colors.red;
-//       } else if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connecting) {
-//         snackbarMessage = 'Proses...';
-//         snackbarColor = Colors.blue;
-//       }
+        if (currentAppState.getAppConnectionState ==
+                MQTTAppConnectionState.connected &&
+            currentAppState.isFirstConnection) {
+          // Hanya tampilkan pesan snackbar saat status terhubung (connected)
+          currentAppState.setFirstConnection(false);
+          snackbarMessage =
+              'Connected! Already subscribed to \n' + _topiSubscribe;
+          snackbarIcon = Icons.check;
+          snackbarColor = Colors.green;
+        } else if (currentAppState.getAppConnectionState ==
+            MQTTAppConnectionState.disconnected) {
+          currentAppState.setFirstConnection(true);
+          snackbarMessage = 'Disconnected!';
+          snackbarIcon = Icons.clear;
+          snackbarColor = Colors.red;
+        } else if (currentAppState.getAppConnectionState ==
+            MQTTAppConnectionState.connecting) {
+          snackbarMessage = 'Proses...';
+          snackbarColor = Colors.blue;
+        }
 
-//       if (snackbarMessage.isNotEmpty) {
-//         WidgetsBinding.instance?.addPostFrameCallback((_) {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             SnackBar(
-//               content: Row(
-//                 children: [
-//                   if (currentAppState.getAppConnectionState == MQTTAppConnectionState.connecting)
-//                     CircularProgressIndicator(
-//                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-//                     )
-//                   else
-//                     Icon(snackbarIcon, color: Colors.white),
-//                   SizedBox(width: 10),
-//                   Text(snackbarMessage),
-//                 ],
-//               ),
-//               duration: Duration(seconds: 3),
-//               backgroundColor: snackbarColor,
-//             ),
-//           );
-//         });
-//       }
+        if (snackbarMessage.isNotEmpty) {
+          WidgetsBinding.instance?.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    if (currentAppState.getAppConnectionState ==
+                        MQTTAppConnectionState.connecting)
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    else
+                      Icon(snackbarIcon, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(snackbarMessage),
+                  ],
+                ),
+                duration: Duration(seconds: 3),
+                backgroundColor: snackbarColor,
+              ),
+            );
+          });
+        }
 
-//       return Container();
-//     },
-//   );
-// }
-
-
-
-
+        return Container();
+      },
+    );
+  }
 
   Widget _buildEditableColumn() {
     return Padding(
@@ -187,25 +229,60 @@ class _MQTTViewState extends State<MQTTView> {
     );
   }
 
+  // Widget _buildPublishMessageRow() {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: <Widget>[
+  //       Expanded(
+  //         child: _buildTextFieldWith(_messageTextController, 'Enter a message',
+  //             currentAppState.getAppConnectionState),
+  //       ),
+  //       _buildSendButtonFrom(currentAppState.getAppConnectionState)
+  //     ],
+  //   );
+  // }
   Widget _buildPublishMessageRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Expanded(
-          child: _buildTextFieldWith(_messageTextController, 'Enter a message',
-              currentAppState.getAppConnectionState),
-        ),
-        _buildSendButtonFrom(currentAppState.getAppConnectionState)
-      ],
-    );
-  }
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+      Expanded(
+        child: _buildTextFieldWith(_messageTextController, 'Kendali DHT MUEHEHEHEE',
+            currentAppState.getAppConnectionState),
+      ),
+      _buildSendButton(1), // Tombol untuk mengirim status go (payload: 1)
+      _buildSendButton(0), // Tombol untuk mengirim status stop (payload: 0)
+    ],
+  );
+}
+
+Widget _buildSendButton(int status) {
+  return ElevatedButton(
+    onPressed: () {
+      // Gantilah `yourJsonKey` dengan kunci yang sesuai di dalam JSON Anda.
+      // Sesuaikan payload sesuai dengan nilai status yang dipilih.
+      var jsonPayload = {'status': status};
+      var jsonString = jsonEncode(jsonPayload);
+      // Kirim JSON ke tempat yang sesuai, seperti melalui socket atau HTTP request.
+      // Gantilah 'sendJsonPayload' dengan metode yang sesuai untuk pengiriman.
+      manager.publish(status.toString());
+
+      // Jika status adalah 0, set temperature dan humidity di appState ke 0.0.
+      if (status == 0) {
+        currentAppState.setTemperature(0.0);
+        currentAppState.setHumidity(0.0);
+      }
+    },
+    child: Text(status == 1 ? 'Go' : 'Stop'), // Ubah teks tombol sesuai dengan status.
+  );
+}
+
 
   Widget _buildConnectionStateText(String status) {
     return Row(
       children: <Widget>[
         Expanded(
           child: Container(
-              color: Colors.deepOrangeAccent,
+              color: Colors.deepOrange,
               child: Text(status, textAlign: TextAlign.center)),
         ),
       ],
@@ -336,4 +413,93 @@ class _MQTTViewState extends State<MQTTView> {
     manager.publish(message);
     _messageTextController.clear();
   }
+   Widget _buildLEDControlCard() {
+    return Card(
+      elevation: 5,
+      margin: const EdgeInsets.all(20.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'LED Control',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 15),
+            _buildLEDSwitch('LED 1', _led1Status, (value) {
+              setState(() {
+                _led1Status = value;
+              });
+              _publishLEDStatus();
+            }),
+            _buildLEDSwitch('LED 2', _led2Status, (value) {
+              setState(() {
+                _led2Status = value;
+              });
+              _publishLEDStatus();
+            }),
+            _buildLEDSwitch('LED 3', _led3Status, (value) {
+              setState(() {
+                _led3Status = value;
+              });
+              _publishLEDStatus();
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLEDSwitch(String label, bool value, Function(bool) onChanged) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 18),
+        ),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  // Function to publish LED statuses as JSON to MQTT
+  void _publishLEDStatus() {
+    final Map<String, dynamic> ledStatusJson = {
+      'led1': _led1Status,
+      'led2': _led2Status,
+      'led3': _led3Status,
+    };
+
+    final String ledStatusMessage = json.encode(ledStatusJson);
+    manager.publish(ledStatusMessage);
+  }
+}
+
+Widget _buildBottomNavigationBar() {
+  return BottomNavigationBar(
+    items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.settings),
+        label: 'Settings',
+      ),
+    ],
+    currentIndex: 0, // Indeks halaman saat ini
+    selectedItemColor: Colors.amber[800],
+    onTap: _onBottomNavigationBarTapped,
+  );
+}
+
+void _onBottomNavigationBarTapped(int index) {
+  // Handle navigasi antar halaman sesuai dengan indeks yang dipilih
+  // Misalnya, menggunakan Navigator.push atau mengubah state widget.
+  print('BottomNavigationBar tapped: $index');
 }

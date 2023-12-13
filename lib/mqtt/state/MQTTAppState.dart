@@ -40,6 +40,16 @@ class MQTTAppState with ChangeNotifier {
     notifyListeners();
   }
 
+  void setTemperature(double a){
+    _temperature = a;
+    notifyListeners();
+  }
+
+  void setHumidity(double a){
+    _humidity = a;
+    notifyListeners();
+  }
+
   String get getReceivedText => _receivedText;
   String get getHistoryText => _historyText;
   MQTTAppConnectionState get getAppConnectionState => _appConnectionState;
