@@ -20,7 +20,7 @@ Deskripsi singkat atau tagline aplikasi Anda di sini.
 
 ## Gambaran Umum
 
-![Tampilan Aplikasi](https://ibb.co/j3bVGcT)
+![Tampilan Aplikasi](https://i.ibb.co/QYp8n2f/porto-1.png)
 
 Tulis deskripsi lebih rinci tentang aplikasi Anda di sini. Jelaskan tujuan, fitur utama, dan mungkin juga teknologi yang digunakan.
 
