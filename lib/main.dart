@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           builder: (BuildContext context) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Uas David(43321118)'),
+                title: Text('Uas David'),
               ),
               body: MQTTView(),
               bottomNavigationBar: _buildBottomNavigationBar(context),
