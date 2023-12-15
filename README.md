@@ -1,54 +1,30 @@
-# temprature_monitor
+# Temperature Monitor
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Nama Aplikasi Anda
-
-Deskripsi singkat atau tagline aplikasi Anda di sini.
+Aplikasi Mobile sebagai client pada protocol MQTT.
 
 ## Gambaran Umum
 
 ![Tampilan Aplikasi](https://i.ibb.co/QYp8n2f/porto-1.png)
 
-Tulis deskripsi lebih rinci tentang aplikasi Anda di sini. Jelaskan tujuan, fitur utama, dan mungkin juga teknologi yang digunakan.
+Aplikasi ini masih dalam bentuk protptype yang masih dalam proses penyempurnaan, dapat menampilkan data suhu dan kelembapan real-time dari perangkat IoT melalui Broker.
 
 ## Fitur Utama
 
-- **Fitur 1:** Deskripsi fitur 1.
-- **Fitur 2:** Deskripsi fitur 2.
-- **Fitur 3:** Deskripsi fitur 3.
+- **Fitur 1:** Terdapat Notifikasi Snackbar untuk Menampilkan state koneksi ke broker.
+- **Fitur 2:** Terdapat fitur Authenticate username dan password pada user yang terdaftar di broker.
+- **Fitur 3:** Tombol perintah yang mengirim payload untuk mengendalikan pembacaan suhu oleh perangkat IoT.
 
 ## Tampilan Aplikasi
 
-![Tampilan Menu](./images/menu_screenshot.png)
-
-Deskripsikan tampilan dan fungsionalitas kunci dari aplikasi Anda. Sertakan gambar tangkapan layar tambahan jika diperlukan.
-
-## Cara Menggunakan
-
-1. Langkah-langkah pengaturan atau instalasi.
-2. Cara menggunakan fitur-fitur tertentu.
-3. Contoh penggunaan kode atau perintah.
+![Tampilan Dashboard](https://i.ibb.co/hdpHXTD/porto-2.png)
 
 ## Teknologi yang Digunakan
 
-- **Bahasa Pemrograman:** Tuliskan bahasa pemrograman yang digunakan (misalnya, Java, Kotlin).
-- **Framework:** Jika ada.
-- **Library:** Jika ada.
+- **Bahasa Pemrograman:** Dart.
+- **Framework:** Flutter.
+- **Library:** MQTT_Client, Prooovider.
 
-## Kontribusi
+## Kontribusi Owner
 
 Jika Anda ingin berkontribusi pada proyek ini, silakan buka **CONTRIBUTING.md** untuk panduan lebih lanjut.
 
