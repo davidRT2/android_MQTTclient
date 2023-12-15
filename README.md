@@ -22,5 +22,5 @@ Aplikasi ini masih dalam bentuk protptype yang masih dalam proses penyempurnaan,
 
 - **Bahasa Pemrograman:** Dart.
 - **Framework:** Flutter.
-- **Library:** MQTT_Client, Prooovider.
+- **Library:** MQTT_Client, Provider.
 
