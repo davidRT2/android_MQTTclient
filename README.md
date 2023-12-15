@@ -24,11 +24,3 @@ Aplikasi ini masih dalam bentuk protptype yang masih dalam proses penyempurnaan,
 - **Framework:** Flutter.
 - **Library:** MQTT_Client, Prooovider.
 
-## Kontribusi Owner
-
-Jika Anda ingin berkontribusi pada proyek ini, silakan buka **CONTRIBUTING.md** untuk panduan lebih lanjut.
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah [Nama Lisensi Anda]. Lihat file **LICENSE** untuk detailnya.
-
